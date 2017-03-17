@@ -174,13 +174,13 @@ def render_delete_results(raw_data):
 
 
 def delete(request):
-    path = request.GET.get('path')
-    is_dir = os.path.isdir(get_full_path(path))
-
-    if not is_safe_path(path):
-        return redirect('admin:fileman_upload_changelist')
-
     if request.method == 'POST':
+        path = request.POST.get('path')
+        is_dir = os.path.isdir(get_full_path(path))
+        
+        if not is_safe_path(path):
+            return redirect('admin:fileman_upload_changelist')
+        
         if is_dir:
             shutil.rmtree(get_full_path(path))
         else:
@@ -188,6 +188,12 @@ def delete(request):
 
         msg = '%s was deleted' % path
         messages.add_message(request, messages.INFO, msg)
+        return redirect('admin:fileman_upload_changelist')
+    
+    path = request.GET.get('path')
+    is_dir = os.path.isdir(get_full_path(path))
+
+    if not is_safe_path(path):
         return redirect('admin:fileman_upload_changelist')
 
     if is_dir:
