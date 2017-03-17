@@ -210,18 +210,13 @@ def delete(request):
 
 
 def rename(request):
-    path = request.GET.get('path')
-    old_name = path.split(os.path.sep)[-1]
-
-    if not is_safe_path(path):
-        return redirect('admin:fileman_upload_changelist')
-
-    if not os.path.exists(get_full_path(path)):
-        msg = "%s doesn't exist" % (path)
-        messages.add_message(request, messages.WARNING, msg)
-        return redirect('admin:fileman_upload_changelist')
-
     if request.method == 'POST':
+        path = request.POST.get('path')
+        old_name = path.split(os.path.sep)[-1]
+
+        if not is_safe_path(path):
+            return redirect('admin:fileman_upload_changelist')
+
         form = RenameForm(request.POST)
         if form.is_valid():
             new_name = form.cleaned_data['new_name']
@@ -234,8 +229,20 @@ def rename(request):
                 msg = '%s was renamed to %s' % (old_name, new_name)
                 messages.add_message(request, messages.INFO, msg)
                 return redirect('admin:fileman_upload_changelist', new_path)
-    else:
-        form = RenameForm()
+
+
+    path = request.GET.get('path')
+    old_name = path.split(os.path.sep)[-1]
+
+    if not is_safe_path(path):
+        return redirect('admin:fileman_upload_changelist')
+
+    if not os.path.exists(get_full_path(path)):
+        msg = "%s doesn't exist" % (path)
+        messages.add_message(request, messages.WARNING, msg)
+        return redirect('admin:fileman_upload_changelist')
+
+    form = RenameForm()
 
     return render(request, 'fileman/rename.html', {
         'app_label': 'fileman',
@@ -244,6 +251,7 @@ def rename(request):
         'form': form,
         'old_name': old_name,
     })
+
 
 
 def upload(request, path=''):
