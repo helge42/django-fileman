@@ -9,6 +9,7 @@
     {% csrf_token %}
     <p>Old name: {{ old_name }}</p>
     {{ form.as_p }}
+    <input type="hidden" name="path" value="{{ path }}">
     <input type="submit" value="Rename">
   </form>
 {% endblock %}
