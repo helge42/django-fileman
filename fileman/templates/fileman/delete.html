@@ -23,6 +23,7 @@
   <form action="{{ request.path }}" method="POST">
     {% csrf_token %}
     <input type="submit" value="Yes, I'm sure" class="delete-button">
+    <input type="hidden" name="path" value="{{ path }}">
     <a class="button cancel-link" onclick="window.history.back(); return false;">
       No, take me back</a>
   </form>
